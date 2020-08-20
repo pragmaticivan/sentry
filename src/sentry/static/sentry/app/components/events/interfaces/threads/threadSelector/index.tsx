@@ -4,7 +4,7 @@ import partition from 'lodash/partition';
 
 import {Thread} from 'app/types/events';
 import {Event, EntryTypeData} from 'app/types';
-import DropdownAutoComplete from 'app/components/dropdownAutoComplete';
+import DropdownAutoComplete from 'app/components/dropdownAutoCompleteV2';
 import DropdownButton from 'app/components/dropdownButton';
 import theme from 'app/utils/theme';
 import {t} from 'app/locale';
@@ -36,9 +36,9 @@ const ThreadSelector = ({threads, event, activeThread, onChange}: Props) => {
     }
 
     return {
+      id: thread.id,
       value: dropDownValue,
       threadInfo,
-      thread,
       label: (
         <Option
           id={thread.id}
@@ -56,33 +56,30 @@ const ThreadSelector = ({threads, event, activeThread, onChange}: Props) => {
     return [...crashed, ...notCrashed].map(getDropDownItem);
   };
 
-  const handleOnChange = ({thread}: {thread: Thread}) => {
-    if (onChange) {
-      onChange(thread);
-    }
-  };
+  const items = getItems();
 
   return (
     <StyledDropdownAutoComplete
-      items={getItems()}
-      onSelect={handleOnChange}
-      align="left"
+      items={items}
+      onSelect={item => {
+        if (onChange) {
+          onChange(item);
+        }
+      }}
       alignMenu="left"
       maxHeight={DROPDOWN_MAX_HEIGHT}
-      placeholder={t('Filter Threads')}
+      searchPlaceholder={t('Filter Threads')}
       emptyMessage={t('You have no threads')}
       noResultsMessage={t('No threads found')}
-      zIndex={theme.zIndex.dropdown}
       menuHeader={<Header />}
-      closeOnSelect
       emptyHidesInput
     >
-      {({isOpen, selectedItem}) => (
+      {({isOpen, selectedItemIndex}) => (
         <StyledDropdownButton size="small" isOpen={isOpen} align="left">
-          {selectedItem ? (
+          {selectedItemIndex !== undefined ? (
             <SelectedOption
-              id={selectedItem.thread.id}
-              details={selectedItem.threadInfo}
+              id={items[selectedItemIndex].id}
+              details={items[selectedItemIndex].threadInfo}
             />
           ) : (
             <SelectedOption
