@@ -14,9 +14,7 @@ type Props = {
   /**
    * Max height of dropdown menu. Units are assumed as `px`
    */
-  maxHeight: number;
-
-  itemSize: ItemSize;
+  maxHeight?: number;
 
   // The highlight index according the search
   highlightedIndex: number;
@@ -44,6 +42,11 @@ type Props = {
    * Currently, our implementation of the virtualized list requires a fixed height.
    */
   virtualizedHeight?: number;
+
+  /**
+   * Size for dropdown items
+   */
+  itemSize?: ItemSize;
 };
 
 const List = ({
@@ -58,7 +61,7 @@ const List = ({
   getItemProps,
   ...props
 }: Props) => {
-  if (virtualizedHeight) {
+  if (virtualizedHeight && maxHeight) {
     return (
       <AutoSizer disableHeight>
         {({width}) => (
@@ -102,7 +105,7 @@ const List = ({
     <React.Fragment>
       {items.map((item, index) => (
         <Row
-          key={item.id}
+          key={item.value}
           item={item}
           index={index}
           itemSize={itemSize}

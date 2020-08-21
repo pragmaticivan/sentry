@@ -9,11 +9,18 @@ type GetItemArgs = {item: Item; index: number; style?: React.CSSProperties};
 
 type Props = {
   item: Item;
+
+  // The index of the element in the array
   index: number;
-  itemSize: ItemSize;
+  // The highlight index according the search
   highlightedIndex: number;
   getItemProps: (args: GetItemArgs) => void;
   inputValue: string;
+
+  /**
+   * Size for dropdown items
+   */
+  itemSize?: ItemSize;
   style?: React.CSSProperties;
 };
 

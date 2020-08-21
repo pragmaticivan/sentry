@@ -40,6 +40,7 @@ type ChildrenArgs = {
   getActorProps: (args?: GetActorArgs) => ActorProps;
   actions: Actions;
   isOpen: boolean;
+  selectedItem?: Item;
   selectedItemIndex?: number;
 };
 
@@ -56,22 +57,8 @@ type MenuFooterChildProps = {
 
 type Props = {
   items: Array<Item>;
-  /**
-   * When an item is selected (via clicking dropdown, or keyboard navigation)
-   */
-  onSelect: (item: Item) => void;
 
-  children: (args: ChildrenArgs) => React.ReactElement | null;
-
-  /**
-   * Max height of dropdown menu. Units are assumed as `px`
-   */
-  maxHeight: number;
-
-  /**
-   * Callback for when dropdown menu is being scrolled
-   */
-  onScroll?: () => void;
+  children: (args: ChildrenArgs) => React.ReactNode;
 
   menuHeader?: React.ReactElement;
   menuFooter?: React.ReactElement | ((props: MenuFooterChildProps) => React.ReactElement);
@@ -155,16 +142,6 @@ type Props = {
   menuWithArrow?: boolean;
 
   /**
-   * Callback for when dropdown menu opens
-   */
-  onOpen?: (event?: React.MouseEvent) => void;
-
-  /**
-   * Callback for when dropdown menu closes
-   */
-  onClose?: () => void;
-
-  /**
    * Props to pass to input/filter component
    */
   inputProps?: any;
@@ -175,14 +152,43 @@ type Props = {
   blendCorner?: boolean;
 
   /**
+   * Max height of dropdown menu. Units are assumed as `px`
+   */
+  maxHeight?: number;
+
+  /**
+   * Callback for when dropdown menu is being scrolled
+   */
+  onScroll?: () => void;
+
+  /**
+   * Callback for when dropdown menu opens
+   */
+  onOpen?: (event?: React.MouseEvent) => void;
+
+  /**
+   * Callback for when dropdown menu closes
+   */
+  onClose?: () => void;
+
+  /**
    * When AutoComplete input changes
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * When an item is selected (via clicking dropdown, or keyboard navigation)
+   */
+  onSelect?: (item: Item) => void;
 
   /**
    * renderProp for the end (right side) of the search input
    */
   inputActions?: React.ReactElement;
+
+  /**
+   * passed down to the AutoComplete Component
+   */
+  disabled?: boolean;
 
   /**
    * for passing  styles to the DropdownBubble
@@ -208,9 +214,10 @@ const Dropdown = ({
   alignMenu = 'left',
   hideInput = false,
   busy = false,
-  itemSize = 'small',
+  itemSize,
   busyItemsStillVisible = false,
   menuWithArrow = false,
+  disabled = false,
   virtualizedHeight,
   virtualizedLabelHeight,
   menuProps,
@@ -239,6 +246,7 @@ const Dropdown = ({
     inputIsActor={false}
     onOpen={onOpen}
     onClose={onClose}
+    disabled={disabled}
     resetInputOnClose
     {...props}
   >
@@ -292,7 +300,7 @@ const Dropdown = ({
         typeof menuFooter === 'function' ? menuFooter({actions}) : menuFooter;
 
       const selectedItemIndex = selectedItem
-        ? items.findIndex(item => item.id === selectedItem.id)
+        ? items.findIndex(item => item.value === selectedItem.value)
         : -1;
 
       return (
@@ -302,6 +310,7 @@ const Dropdown = ({
             getActorProps,
             actions,
             isOpen,
+            selectedItem,
             selectedItemIndex: selectedItemIndex === -1 ? undefined : selectedItemIndex,
           })}
           {isOpen && (

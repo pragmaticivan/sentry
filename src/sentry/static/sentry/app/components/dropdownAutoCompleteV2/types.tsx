@@ -9,13 +9,14 @@
 // };
 
 export type Item = {
-  id: string;
-  value: any;
+  // this should be unique
+  value: string;
   label:
     | (({inputValue}: {inputValue: string}) => React.ReactElement)
     | React.ReactElement;
   searchKey?: string;
   items?: Array<Omit<Item, 'items'>>;
+  hideGroupLabel?: boolean;
 };
 
 export type ItemSize = 'zero' | 'small';
