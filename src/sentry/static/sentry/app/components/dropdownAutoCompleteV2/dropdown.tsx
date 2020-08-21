@@ -12,14 +12,32 @@ import {Item, ItemSize} from './types';
 import {autoCompleteFilter} from './utils';
 import List from './list';
 
+// Props for the "actor" element of `<DropdownMenu>`
+// This is the element that handles visibility of the dropdown menu
+type ActorProps = {
+  onClick: (e: React.MouseEvent<Element>) => void;
+  onMouseEnter: (e: React.MouseEvent<Element>) => void;
+  onMouseLeave: (e: React.MouseEvent<Element>) => void;
+  onKeyDown: (e: React.KeyboardEvent<Element>) => void;
+};
+
+type GetActorArgs = {
+  onClick?: (e: React.MouseEvent<Element>) => void;
+  onMouseEnter?: (e: React.MouseEvent<Element>) => void;
+  onMouseLeave?: (e: React.MouseEvent<Element>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<Element>) => void;
+  style?: React.CSSProperties;
+  className?: string;
+};
+
 type Actions = {
   open: () => void;
   close: () => void;
 };
 
-type ChildrenProps = {
+type ChildrenArgs = {
   getInputProps: () => void;
-  getActorProps: () => {onClick: () => void};
+  getActorProps: (args?: GetActorArgs) => ActorProps;
   actions: Actions;
   isOpen: boolean;
   selectedItemIndex?: number;
@@ -43,7 +61,7 @@ type Props = {
    */
   onSelect: (item: Item) => void;
 
-  children: (props: ChildrenProps) => React.ReactElement | null;
+  children: (args: ChildrenArgs) => React.ReactElement | null;
 
   /**
    * Max height of dropdown menu. Units are assumed as `px`
@@ -139,7 +157,7 @@ type Props = {
   /**
    * Callback for when dropdown menu opens
    */
-  onOpen?: () => void;
+  onOpen?: (event?: React.MouseEvent) => void;
 
   /**
    * Callback for when dropdown menu closes
@@ -198,21 +216,21 @@ const Dropdown = ({
   menuProps,
   noResultsMessage,
   inputProps,
-  onSelect,
-  onOpen,
-  onClose,
   children,
   rootClassName,
   className,
   emptyHidesInput,
-  onChange,
   menuHeader,
   filterValue,
-  onScroll,
   items,
   menuFooter,
   style,
   inputActions,
+  onScroll,
+  onChange,
+  onSelect,
+  onOpen,
+  onClose,
   ...props
 }: Props) => (
   <AutoComplete
@@ -274,8 +292,8 @@ const Dropdown = ({
         typeof menuFooter === 'function' ? menuFooter({actions}) : menuFooter;
 
       const selectedItemIndex = selectedItem
-        ? items.findIndex(item => item.id === selectedItem)
-        : undefined;
+        ? items.findIndex(item => item.id === selectedItem.id)
+        : -1;
 
       return (
         <AutoCompleteRoot {...getRootProps()} className={rootClassName}>
@@ -284,7 +302,7 @@ const Dropdown = ({
             getActorProps,
             actions,
             isOpen,
-            selectedItemIndex,
+            selectedItemIndex: selectedItemIndex === -1 ? undefined : selectedItemIndex,
           })}
           {isOpen && (
             <BubbleWithMinWidth

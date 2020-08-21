@@ -5,31 +5,37 @@ import space from 'app/styles/space';
 
 import {Item, ItemSize} from './types';
 
+type GetItemArgs = {item: Item; index: number; style?: React.CSSProperties};
+
 type Props = {
   item: Item;
+  index: number;
   itemSize: ItemSize;
   highlightedIndex: number;
-  getItemProps: (item: Item) => void;
+  getItemProps: (args: GetItemArgs) => void;
   inputValue: string;
   style?: React.CSSProperties;
 };
 
 const Row = ({
   item,
-  // style,
+  style,
   itemSize,
   getItemProps,
   highlightedIndex,
+  index,
   inputValue,
-}: Props) => (
-  <AutoCompleteItem
-    size={itemSize}
-    highlightedIndex={highlightedIndex}
-    {...getItemProps(item)}
-  >
-    {typeof item.label === 'function' ? item.label({inputValue}) : item.label}
-  </AutoCompleteItem>
-);
+}: Props) => {
+  return (
+    <AutoCompleteItem
+      size={itemSize}
+      highlightedIndex={highlightedIndex}
+      {...getItemProps({item, index, style})}
+    >
+      {typeof item.label === 'function' ? item.label({inputValue}) : item.label}
+    </AutoCompleteItem>
+  );
+};
 // item.groupLabel ? (
 //   <LabelWithBorder style={style}>
 //     {item.label && <GroupLabel>{item.label}</GroupLabel>}

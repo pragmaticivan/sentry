@@ -5,6 +5,8 @@ import {Item, ItemSize} from './types';
 import Row from './row';
 import {getHeight} from './utils';
 
+type GetItemArgs = {item: Item; index: number; style?: React.CSSProperties};
+
 type Props = {
   // flat item array | grouped item array
   items: Array<Item>;
@@ -18,7 +20,7 @@ type Props = {
 
   // The highlight index according the search
   highlightedIndex: number;
-  getItemProps: (item: Item) => void;
+  getItemProps: (args: GetItemArgs) => void;
 
   /**
    * Search field's input value
@@ -81,6 +83,7 @@ const List = ({
               <Row
                 key={key}
                 item={items[index]}
+                index={index}
                 style={style}
                 itemSize={itemSize}
                 highlightedIndex={highlightedIndex}
@@ -97,10 +100,11 @@ const List = ({
 
   return (
     <React.Fragment>
-      {items.map(item => (
+      {items.map((item, index) => (
         <Row
           key={item.id}
           item={item}
+          index={index}
           itemSize={itemSize}
           highlightedIndex={highlightedIndex}
           inputValue={inputValue}
