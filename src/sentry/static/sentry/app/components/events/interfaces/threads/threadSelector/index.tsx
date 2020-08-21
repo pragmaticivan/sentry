@@ -36,7 +36,6 @@ const ThreadSelector = ({threads, event, activeThread, onChange}: Props) => {
     }
 
     return {
-      id: thread.id,
       value: thread.id,
       threadInfo,
       label: (
@@ -68,7 +67,7 @@ const ThreadSelector = ({threads, event, activeThread, onChange}: Props) => {
     <StyledDropdownAutoComplete
       items={items}
       onSelect={item => {
-        const selectedThread = threads.find(thread => thread.id === item.id);
+        const selectedThread = threads.find(thread => thread.id === item.value);
         if (selectedThread) {
           handleChange(selectedThread);
         }
@@ -85,7 +84,7 @@ const ThreadSelector = ({threads, event, activeThread, onChange}: Props) => {
         <StyledDropdownButton size="small" isOpen={isOpen} align="left">
           {selectedItemIndex !== undefined ? (
             <SelectedOption
-              id={items[selectedItemIndex].id}
+              id={items[selectedItemIndex].value}
               details={items[selectedItemIndex].threadInfo}
             />
           ) : (
