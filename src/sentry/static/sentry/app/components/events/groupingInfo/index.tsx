@@ -14,6 +14,8 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import GroupVariant from './groupingVariant';
 import GroupingConfigSelect from './groupingConfigSelect';
 
+type GroupingConfigSelectProps = GroupingConfigSelect['props'];
+
 type Props = AsyncComponent['props'] & {
   api: Client;
   organization: Organization;
@@ -55,7 +57,9 @@ class EventGroupingInfo extends AsyncComponent<Props, State> {
     }));
   };
 
-  handleConfigSelect = selection => {
+  handleConfigSelect = (
+    selection: Parameters<GroupingConfigSelectProps['onSelect']>[0]
+  ) => {
     this.setState({configOverride: selection.value}, () => this.reloadData());
   };
 
