@@ -1,7 +1,9 @@
 import React from 'react';
 import {Location} from 'history';
 import styled from '@emotion/styled';
+import pick from 'lodash/pick';
 
+import {URL_PARAM} from 'app/constants/globalSelectionHeader';
 import space from 'app/styles/space';
 import {t} from 'app/locale';
 import ListLink from 'app/components/links/listLink';
@@ -68,6 +70,11 @@ const ReleaseHeader = ({location, orgId, release, project, releaseMeta}: Props) 
     },
   ];
 
+  const getCurrentTabUrl = (path: string) => ({
+    pathname: path,
+    query: pick(location.query, Object.values(URL_PARAM)),
+  });
+
   return (
     <StyledHeader>
       <HeaderInfoContainer>
@@ -131,7 +138,7 @@ const ReleaseHeader = ({location, orgId, release, project, releaseMeta}: Props) 
         {tabs.map(tab => (
           <ListLink
             key={tab.to}
-            to={`${tab.to}${location.search}`}
+            to={getCurrentTabUrl(tab.to)}
             isActive={() => tab.to === location.pathname}
           >
             {tab.title}
