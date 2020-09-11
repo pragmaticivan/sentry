@@ -2,6 +2,7 @@ import React from 'react';
 
 import {assignToUser, assignToActor} from 'app/actionCreators/group';
 import withApi from 'app/utils/withApi';
+import withCommitters from 'app/utils/withCommitters';
 import withOrganization from 'app/utils/withOrganization';
 import Access from 'app/components/acl/access';
 import {Organization, Group, Event, Actor, Commit, Project, User} from 'app/types';
@@ -70,14 +71,19 @@ class SuggestedOwners extends React.Component<Props, State> {
   fetchCommitters = async (eventId: Event['id']) => {
     const {api, project, organization} = this.props;
     // TODO: move this into a store since `EventCause` makes this exact request as well
+    // TODO(leedongwei)
     try {
+      console.log('fetchCommitters');
       const data = await api.requestPromise(
         `/projects/${organization.slug}/${project.slug}/events/${eventId}/committers/`
       );
+
+      console.log('fetchCommitters success', data.committers);
       this.setState({
         committers: data.committers,
       });
     } catch {
+      console.log('fetchCommitters fail');
       this.setState({
         committers: [],
       });
@@ -187,4 +193,4 @@ class SuggestedOwners extends React.Component<Props, State> {
     );
   }
 }
-export default withApi(withOrganization(SuggestedOwners));
+export default withApi(withOrganization(withCommitters(SuggestedOwners)));

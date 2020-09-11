@@ -53,6 +53,7 @@ class EventCause extends React.Component {
 
   fetchData(event) {
     // TODO(dcramer): this API request happens twice, and we need a store for it
+    // TODO(leedongwei)
     if (!event) {
       return;
     }

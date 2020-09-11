@@ -1044,6 +1044,11 @@ export type Commit = {
   releases: BaseRelease[];
 };
 
+export type Committer = {
+  commits: Commit[];
+  author: AvatarUser;
+};
+
 export type CommitFile = {
   id: string;
   author: CommitAuthor;
