@@ -76,6 +76,15 @@ const backend = [
   'rust',
 ] as const;
 
+const serverless = [
+  'python-pythonawslambda',
+  'python-pythongcpfunctions',
+  'python-pythonazurefunctions',
+  'node-awslambda',
+  'node-gcpfunctions',
+  'node-azurefunctions',
+] as const;
+
 const desktop = ['cocoa', 'csharp', 'java', 'electron', 'minidump', 'native'] as const;
 
 const categoryList = [
@@ -84,6 +93,7 @@ const categoryList = [
   {id: 'server', name: t('Server'), platforms: backend},
   {id: 'mobile', name: t('Mobile'), platforms: mobile},
   {id: 'desktop', name: t('Desktop'), platforms: desktop},
+  {id: 'serverless', name: t('Serverless'), platforms: serverless},
 ] as const;
 
 export const sourceMaps: PlatformKey[] = [
@@ -102,6 +112,7 @@ export type PlatformKey =
   | typeof backend[number]
   | typeof desktop[number]
   | typeof tracing[number]
+  | typeof serverless[number]
   | 'other';
 
 export default categoryList;
